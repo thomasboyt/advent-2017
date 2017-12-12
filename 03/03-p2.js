@@ -2,7 +2,7 @@ function gridKey(x, y) {
   return `${x},${y}`;
 }
 
-function getPosition(n) {
+function getFirstValueOver(n) {
   const grid = {};
   grid[gridKey(0, 0)] = 1;
 
@@ -30,7 +30,24 @@ function getPosition(n) {
     }
   }
 
-  for (let i = 2; i <= n; i += 1) {
+  function sumAdjacentSpaces(x, y) {
+    const adj = [
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [-1, 0],
+      [1, 0],
+      [-1, 1],
+      [0, 1],
+      [1, 1],
+    ];
+
+    return adj.map(([ax, ay]) => {
+      return grid[gridKey(x + ax, y+ ay)];
+    }).reduce((acc, n) => acc + (n || 0), 0);
+  }
+
+  while (true) {
     maybeTurn();
 
     const currentDirection = ccwDirections[currentDirectionIdx];
@@ -38,19 +55,17 @@ function getPosition(n) {
     x += currentDirection[0];
     y += currentDirection[1];
 
-    grid[gridKey(x, y)] = i;
+    const val = sumAdjacentSpaces(x, y);
+    if (val > n) {
+      return val;
+    } else {
+      grid[gridKey(x, y)] = val;
+    }
   }
-
-  return [x, y];
 }
 
-function getSteps(gridSpace) {
-  const coordinates = getPosition(gridSpace);
-  return Math.abs(coordinates[0]) + Math.abs(coordinates[1]);
-}
-
-module.exports = getSteps;
+module.exports = getFirstValueOver;
 
 if (require.main === module) {
-  console.log(getSteps(368078));
+  console.log(getFirstValueOver(368078));
 }
