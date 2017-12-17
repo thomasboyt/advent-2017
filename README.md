@@ -28,3 +28,4 @@ npm test -- 05/05-p2.test.js
 - [x] Day 14
 - [x] Day 15
 - [x] Day 16
+- [x] Day 17
